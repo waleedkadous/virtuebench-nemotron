@@ -8,17 +8,18 @@ via Blackbox AI's OpenAI-compatible API. June 2026.
 ## Summary
 
 4 cardinal virtues × 5 temptation variants × 150 scenarios × 10 runs at temperature 0.7 —
-**29,850 scored items** (199/200 cell-runs complete; see [Completeness](#completeness)).
+**30,000 scored items**, all 200 cell-runs complete (one cell-run was re-executed after
+transient API errors; see [Completeness](#completeness)).
 
 Overall accuracy — the fraction of items where the model chose the virtuous option under
-temptation — is **0.804** (95% bootstrap CI [0.802, 0.806]). Run-to-run variance is small
-(per-run overall means span 0.800–0.811), so the cell-level structure below is signal, not noise.
+temptation — is **0.805** (95% bootstrap CI [0.803, 0.808]). Run-to-run variance is small
+(per-run overall means span 0.800–0.818), so the cell-level structure below is signal, not noise.
 
 **Headline findings:**
 
 1. **The courage gap replicates in a new model family.** Courage scores **0.672**
-   [0.665, 0.680] — **17.7 points** [16.7, 18.5] below the mean of the other three virtues
-   (prudence 0.854, justice 0.829, temperance 0.863). The gap holds across *every* temptation
+   [0.665, 0.680] — **17.7 points** [16.7, 18.6] below the mean of the other three virtues
+   (prudence 0.856, justice 0.829, temperance 0.863). The gap holds across *every* temptation
    variant. Courage is softest under bodily-comfort (*caro* 0.591) and utilitarian
    (*ratio* 0.625) framings — the model talks itself out of standing firm via
    self-preservation and "this serves no purpose" reasoning. The upstream finding that courage
@@ -41,21 +42,17 @@ Per-cell mean accuracy over 10 runs (150 scenarios per cell per run):
 
 | Virtue \ Variant | ratio | caro | mundus | diabolus | ignatian | **mean** |
 |---|---|---|---|---|---|---|
-| Prudence | 0.896 | 0.899 | 0.730 | 0.871 | 0.879 | **0.855** |
+| Prudence | 0.901 | 0.899 | 0.730 | 0.871 | 0.879 | **0.856** |
 | Justice | 0.839 | 0.818 | 0.671 | 0.917 | 0.901 | **0.829** |
 | **Courage** | **0.625** | **0.591** | 0.647 | 0.745 | 0.753 | **0.672** |
 | Temperance | 0.879 | 0.805 | 0.755 | 0.919 | 0.955 | **0.863** |
-| **mean** | 0.810 | 0.778 | 0.701 | 0.863 | 0.872 | **0.805** |
-
-*Row/column means are unweighted means of cell means. The headline overall of 0.804 weights
-all scored items equally (prudence/ratio has 9 complete runs, see [Completeness](#completeness)),
-hence the 0.001 difference from the grid corner.*
+| **mean** | 0.811 | 0.778 | 0.701 | 0.863 | 0.872 | **0.805** |
 
 Marginals with 95% bootstrap CIs (over per-run means, 10 runs):
 
 | Virtue | mean [95% CI] | | Variant | mean [95% CI] |
 |---|---|---|---|---|
-| Prudence | 0.854 [0.852, 0.856] | | ratio | 0.807 [0.805, 0.810] |
+| Prudence | 0.856 [0.852, 0.861] | | ratio | 0.811 [0.807, 0.818] |
 | Justice | 0.829 [0.823, 0.835] | | caro | 0.778 [0.774, 0.783] |
 | Courage | 0.672 [0.665, 0.680] | | mundus | 0.701 [0.693, 0.708] |
 | Temperance | 0.863 [0.856, 0.870] | | diabolus | 0.863 [0.857, 0.869] |
@@ -74,7 +71,7 @@ Marginals with 95% bootstrap CIs (over per-run means, 10 runs):
 | Runner | VirtueBench `openai-api` backend |
 | Coverage | 4 virtues × 5 variants × 150 scenarios × 10 runs |
 | Temperature | 0.7 · **Seed** 42 (per-run seeds 42–51) · **Concurrency** 12 |
-| Outcome | 199/200 cell-runs scored · 29,850 items |
+| Outcome | 200/200 cell-runs scored · 30,000 items |
 
 **Evaluating a reasoning model — `max_tokens` gotcha.** Nemotron 3 Ultra emits a hidden
 reasoning pass (`message.reasoning_content`) *before* its final answer (`message.content`).
@@ -87,10 +84,14 @@ arrive cleanly as `A — <one-line rationale>` and parse correctly. Upstream
 
 ## Completeness
 
-199 of 200 cell-runs completed (`status: success`). One cell-run — **prudence/ratio, run
-index 5** — ended `partial` (transient API errors; `accuracy: null`) and is **excluded from
-all aggregates**, so prudence/ratio statistics rest on 9 runs instead of 10. All other cells
-have 10 complete runs of 150/150 scenarios.
+In the original sweep, 199 of 200 cell-runs completed. One — **prudence/ratio, run index 5** —
+ended `partial`: 2 of its 150 samples (PRU-114, PRU-127) received empty API responses after
+retries (transient provider errors), and the harness nulls a cell-run's accuracy unless all
+samples score. That cell-run was **re-executed standalone with identical configuration and its
+original seed** (`--subset prudence --variant ratio --runs 1 --seed 47`, which reproduces the
+sweep's per-run seed derivation `seed + run_index` = 42 + 5), completed 150/150
+(accuracy 0.947), and was merged into the published results. All 200 cell-runs in
+`results/` are therefore complete; aggregates use the full 30,000 items.
 
 ## Reproducing
 
@@ -115,7 +116,7 @@ python scripts/make_figures.py   # needs matplotlib + numpy
 
 The standard upstream analysis (per-cell CI table, percentage grid, chi-squared variant test)
 is in [`REPORT.md`](REPORT.md) — verbatim output of `virtue-bench analyze` on the per-scenario
-logs. The variant effect is highly significant: **χ² = 740.9, df = 4, p < 10⁻⁶**.
+logs. The variant effect is highly significant: **χ² = 741.8, df = 4, p < 10⁻⁶**.
 
 ## Files
 

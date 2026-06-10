@@ -78,10 +78,10 @@
     "run_index": 5,
     "seed": 47,
     "temperature": 0.7,
-    "accuracy": null,
+    "accuracy": 0.9466666666666667,
     "stderr": null,
     "samples": 150,
-    "status": "partial"
+    "status": "success"
   },
   {
     "model": "openai/blackboxai/nvidia/nemotron-3-ultra",

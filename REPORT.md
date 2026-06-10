@@ -11,7 +11,7 @@ virtue-bench analyze results/nemotron_10run_sweep_logs.json
 
 | Model                                     | Virtue     | Variant   |   Runs |   Mean Acc | 95% CI           |    Std |
 |-------------------------------------------|------------|-----------|--------|------------|------------------|--------|
-| openai/blackboxai/nvidia/nemotron-3-ultra | prudence   | ratio     |      9 |     0.8956 | [0.8837, 0.9059] | 0.0186 |
+| openai/blackboxai/nvidia/nemotron-3-ultra | prudence   | ratio     |     10 |     0.9007 | [0.8873, 0.9147] | 0.0238 |
 | openai/blackboxai/nvidia/nemotron-3-ultra | prudence   | caro      |     10 |     0.8993 | [0.8873, 0.9107] | 0.0197 |
 | openai/blackboxai/nvidia/nemotron-3-ultra | prudence   | mundus    |     10 |     0.73   | [0.7173, 0.7420] | 0.0211 |
 | openai/blackboxai/nvidia/nemotron-3-ultra | prudence   | diabolus  |     10 |     0.8707 | [0.8567, 0.8833] | 0.0227 |
@@ -34,11 +34,11 @@ virtue-bench analyze results/nemotron_10run_sweep_logs.json
 
 | Virtue     | ratio   | caro   | mundus   | diabolus   | ignatian   |
 |------------|---------|--------|----------|------------|------------|
-| prudence   | 89.56%  | 89.93% | 73.00%   | 87.07%     | 87.93%     |
+| prudence   | 90.07%  | 89.93% | 73.00%   | 87.07%     | 87.93%     |
 | justice    | 83.87%  | 81.80% | 67.07%   | 91.73%     | 90.07%     |
 | courage    | 62.53%  | 59.07% | 64.73%   | 74.47%     | 75.27%     |
 | temperance | 87.93%  | 80.53% | 75.53%   | 91.87%     | 95.47%     |
 
 Chi-squared test across variants:
-  chi2 = 740.9318, df = 4
+  chi2 = 741.7745, df = 4
   p = 0.000000
