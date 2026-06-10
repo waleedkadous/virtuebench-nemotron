@@ -1,0 +1,30 @@
+# VirtueBench V2: Full baseline — NVIDIA Nemotron 3 Ultra (550B-A55B)
+# All virtues × all variants, 10 runs with bootstrap CIs (matches the
+# GPT-4o / GPT-5.4 protocol in the README).
+#
+# Served via Blackbox AI's OpenAI-compatible API. Connection settings are
+# runner flags, not experiment config — full invocation:
+#
+#   export OPENAI_API_KEY=<blackbox api key>
+#   virtue-bench run --config configs/nemotron3ultra_full_10run.yaml \
+#     --runner openai-api \
+#     --base-url https://api.blackbox.ai/v1 \
+#     --max-tokens 8192 \
+#     --concurrency 12 \
+#     --output nemotron_10run_sweep
+#
+# Note: Nemotron 3 Ultra is a reasoning model — it spends completion tokens
+# on a hidden reasoning pass before emitting the final A/B answer, so it
+# needs a generous --max-tokens (the 128 cap used pre-v2.2.x fails every
+# call with content=None / finish_reason="length").
+name: "nemotron3ultra-full-10run"
+model: "openai/blackboxai/nvidia/nemotron-3-ultra"
+virtues: [prudence, justice, courage, temperance]
+variants: [ratio, caro, mundus, diabolus, ignatian]
+runs: 10
+temperature: 0.7
+seed: 42
+concurrency: 12
+retries: 2
+timeout: 120
+detailed: true
