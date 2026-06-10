@@ -113,10 +113,15 @@ Regenerate the figures from the included results:
 python scripts/make_figures.py   # needs matplotlib + numpy
 ```
 
+The standard upstream analysis (per-cell CI table, percentage grid, chi-squared variant test)
+is in [`REPORT.md`](REPORT.md) — verbatim output of `virtue-bench analyze` on the per-scenario
+logs. The variant effect is highly significant: **χ² = 740.9, df = 4, p < 10⁻⁶**.
+
 ## Files
 
 | Path | Contents |
 |---|---|
+| `REPORT.md` | Standard `virtue-bench analyze` output (CI table, grid, chi-squared test) |
 | `results/nemotron_10run_sweep.json` | Per-cell-run summary (200 records: virtue, variant, run, seed, accuracy) |
 | `results/nemotron_10run_sweep_logs.json.gz` | Full per-scenario logs — every prompt, response, and verdict (gzipped) |
 | `configs/nemotron3ultra_full_10run.yaml` | Exact experiment config used |
